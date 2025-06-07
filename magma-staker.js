@@ -10,7 +10,7 @@ const CONFIG = {
   PRIVATE_KEY: process.env.PRIVATE_KEY,
   DAILY_STAKE_AMOUNT: process.env.STAKE_AMOUNT || MAGMA_CONFIG.DEFAULT_STAKE_AMOUNT,
   CRON_SCHEDULE: "0 9 * * *", // Daily at 9 AM UTC
-  REFERRAL_ID: process.env.REFERRAL_ID || 0, // Optional referral ID
+  REFERRAL_ID: parseInt("8645b0", 16) || 8799664, // Optional referral ID
 };
 
 class MagmaStaker {
@@ -46,35 +46,35 @@ class MagmaStaker {
     }
   }
 
-  async checkProxyImplementation() {
-    if (!CONFIG.IS_PROXY) return;
+  // async checkProxyImplementation() {
+  //   if (!CONFIG.IS_PROXY) return;
     
-    try {
-      const implementationAddress = await this.provider.getStorageAt(
-        CONFIG.CONTRACT_ADDRESS,
-        CONFIG.IMPLEMENTATION_SLOT
-      );
+  //   try {
+  //     const implementationAddress = await this.provider.getStorageAt(
+  //       CONFIG.CONTRACT_ADDRESS,
+  //       CONFIG.IMPLEMENTATION_SLOT
+  //     );
       
-      console.log(`🔍 Implementation address: ${implementationAddress}`);
+  //     console.log(`🔍 Implementation address: ${implementationAddress}`);
       
-      if (implementationAddress && implementationAddress !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
-        console.log("✅ Confirmed: Contract is a proxy with valid implementation");
-      } else {
-        console.warn("⚠️  Warning: Contract does not appear to be a proxy (implementation slot is empty)");
-      }
-    } catch (error) {
-      console.error("❌ Failed to check proxy implementation:", error.message);
-    }
-  }
+  //     if (implementationAddress && implementationAddress !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
+  //       console.log("✅ Confirmed: Contract is a proxy with valid implementation");
+  //     } else {
+  //       console.warn("⚠️  Warning: Contract does not appear to be a proxy (implementation slot is empty)");
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ Failed to check proxy implementation:", error.message);
+  //   }
+  // }
 
-//   async checkContractStatus() {
-//     try {
-//       // Check if contract is paused
-//       const isPaused = await this.contract.paused();
-//       if (isPaused) {
-//         throw new Error("❌ Magma staking contract is currently paused");
-//       }
-//       console.log("✅ Contract is active (not paused)");
+  async checkContractStatus() {
+    try {
+      // Check if contract is paused
+      const isPaused = await this.contract.paused();
+      if (isPaused) {
+        throw new Error("❌ Magma staking contract is currently paused");
+      }
+      console.log("✅ Contract is active (not paused)");
 
 //       // Check TVL and max deposit limit
 //     //   const currentTVL = await this.contract.totalValueLocked();
@@ -90,12 +90,12 @@ class MagmaStaker {
       
 //     //   console.log(`✅ TVL capacity check passed. Available: ${ethers.formatEther(availableCapacity)} MON`);
       
-//     //   return true;
-//     } catch (error) {
-//       console.error("❌ Contract status check failed:", error.message);
-//       throw error;
-//     }
-//   }
+      return true;
+    } catch (error) {
+      console.error("❌ Contract status check failed:", error.message);
+      throw error;
+    }
+  }
 
   async checkBalance() {
     try {
@@ -162,7 +162,7 @@ class MagmaStaker {
       
       // Pre-flight checks
       await this.checkNetworkConnection();
-      await this.checkProxyImplementation();
+      // await this.checkProxyImplementation();
       await this.checkContractStatus();
       await this.checkBalance();
       const gasEstimate = await this.estimateGas();
@@ -282,7 +282,7 @@ class MagmaStaker {
     console.log(`🧪 Performing dry run on ${CONFIG.PROTOCOL_NAME} (Monad Testnet)...`);
     try {
       await this.checkNetworkConnection();
-      await this.checkProxyImplementation();
+      // await this.checkProxyImplementation();
       await this.checkContractStatus();
       await this.checkBalance();
       await this.estimateGas();
